@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--<include resource="org/springframework/boot/logging/logback/defaults.xml"/>-->
+    <property name="ENCODER_PATTERN"
+              value="kafka-demo|${HOSTNAME}|%d{yyyy-MM-dd HH:mm:ss.SSS}|[%thread]|%-5level|%logger{80}|%L|%X{eventId}| %msg%n"/>
+
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${ENCODER_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 生成日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 日志格式 -->
+        <encoder>
+            <pattern>${ENCODER_PATTERN}</pattern>
+        </encoder>
+        <!--日志文件输出的文件名 -->
+        <file>/tmp/output/kafka-demo/app.log</file>
+
+        <!-- 固定数量的日志文件，防止将磁盘占满 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>/tmp/output/kafka-demo/app.log.%i</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+
+        <!--日志文件最大的大小 -->
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>500MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!--<appender name="GRAYLOG" class="cn.fraudmetrix.graylog.logback.GraylogAppender">-->
+    <!--<enabled>true</enabled> &lt;!&ndash; 默认开启 &ndash;&gt;-->
+    <!--<graylogHost>${GRAYLOG_HOST}</graylogHost>-->
+    <!--<graylogPort>${GRAYLOG_PORT}</graylogPort>-->
+    <!--<levelIncluded>true</levelIncluded>-->
+    <!--<loggerIncluded>true</loggerIncluded>-->
+    <!--<additionalField>app=${APPNAME}</additionalField>-->
+    <!--<additionalField>file=app.log</additionalField>-->
+    <!--<additionalField>env=${ENV}</additionalField>-->
+    <!--<additionalField>cluster=${CLUSTER}</additionalField>-->
+    <!--</appender>-->
+
+
+    <if condition='p("CONSOLE_LEVEL").equals("OFF")'>
+        <then>
+            <root level="INFO">
+                <appender-ref ref="FILE"/>
+                <!--<appender-ref ref="GRAYLOG"/>-->
+            </root>
+        </then>
+        <else>
+            <root level="${CONSOLE_LEVEL:-INFO}">
+                <appender-ref ref="FILE"/>
+                <appender-ref ref="CONSOLE"/>
+                <!--<appender-ref ref="GRAYLOG"/>-->
+            </root>
+        </else>
+    </if>
+
+</configuration>
