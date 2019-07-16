@@ -26,7 +26,7 @@ public class ProducerTest {
         ((KafkaCommonProducer) producer).setKafkaConfig(kafkaConfig);
         ((KafkaCommonProducer) producer).init();
         for (long i = 0; ; i++) {
-            String topic = "kafka-demo-consumer-test";
+            String topic = "kafka-demo-test";
             String message = "zjw测试数据";
             producer.produce(topic, message + i);
         }

@@ -22,7 +22,7 @@ public class ConsumerTest {
         config.setBootstrapServers("localhost:9092,localhost:9093,localhost:9094,localhost:9095");
         config.setGroupId("kafka-demo-consumer");
         config.setThreadCount(1);
-        config.setTopics(Lists.newArrayList("kafka-demo-consumer-test"));
+        config.setTopics(Lists.newArrayList("kafka-demo-test"));
 
     }
 
